@@ -34,6 +34,18 @@ const PresenterInitialCard = () => {
     }
   };
 
+  const redirectBackToInsertCode = () => {
+    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
+    if (userInfo) {
+      delete userInfo.code;
+      delete userInfo.role;
+      const userInfoUpdated = { ...userData, userInfo };
+
+      setUserData(userInfoUpdated);
+      localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
+    }
+  };
+
   const checkPrompt = async () => {
     const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
     if (userInfo.code) {
@@ -54,16 +66,19 @@ const PresenterInitialCard = () => {
           setLoading(false);
         } else {
           setLoading(false);
-          setPresenterStep(3);
+          // setPresenterStep(3);
           setTimeUpCode(true);
+          redirectBackToInsertCode()
         }
         setGetResponse(true);
       } catch (error) {
         console.log(error);
         setGetResponse(true);
-        setPresenterStep(1);
+        // setPresenterStep(1);
         setTimeUpCode(false);
         setLoading(false);
+
+        redirectBackToInsertCode()
       }
     } else {
       return;
@@ -120,7 +135,7 @@ const PresenterInitialCard = () => {
       <h4 className="text-[16px] text-center font-bold">
         Time to hear your thoughts!
       </h4>
-      <p className="text-[10px] text-center">
+      <p className="text-[10px] text-center cursor-pointer">
         Click the button below to generate a link/code your lab mates can use to
         participate in the lesson by offering their own answers.
       </p>
@@ -134,12 +149,12 @@ const PresenterInitialCard = () => {
         </button>
       ) : (
         <div className="flex space-x-2">
-          <button
-            className="bg-ui-dark-violate w-full mt-1 px-2 py-1 text-[16px] hover:scale-[1.02] text-white font-bold rounded-md"
-            onClick={copyToClipboard}
+          <div
+            className="bg-ui-dark-violate text-center cursor-text w-full mt-1 px-2 py-1 text-[16px] text-white font-bold rounded-md"
+            
           >
             {linkCode}
-          </button>
+          </div>
           <button
             className="bg-ui-violate w-full mt-1 px-2 py-1 text-[16px] hover:scale-[1.02] text-white font-bold rounded-md"
             onClick={handleStart}

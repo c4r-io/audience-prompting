@@ -68,7 +68,7 @@ const PresenterTimeUpCard = () => {
   const timeUpHandler =()=>{
     updatePrompt(true)
     setPresenterStep(3)
-    toast.warning("Time's up!");
+    toast.warning("Time&apos;s up!");
     setTimeUpCode(true)
   }
   const extendHandler =()=>{

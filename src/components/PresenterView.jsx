@@ -10,20 +10,30 @@ import {
   AudienceAnswersContext,
   PresenterContext,
   TimeUpCodeContext,
+  UserContext,
 } from "@/contextapi/UserContext";
 const PresenterView = () => {
   const { timeUpCode, setTimeUpCode } = useContext(TimeUpCodeContext);
   const { presenterStep, setPresenterStep } = useContext(PresenterContext);
+  const { userData, setUserData } = useContext(UserContext);
   const { audienceAnswers, setAudienceAnswers } = useContext(
     AudienceAnswersContext
   );
   const clearSession = () => {
     setAudienceAnswers(null)
     setTimeUpCode(false);
-    setPresenterStep(1);
+    redirectBackToInsertCode()
+  };
+  const redirectBackToInsertCode = () => {
     const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
-    delete userInfo.code;
-    localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
+    if (userInfo) {
+      delete userInfo.code;
+      delete userInfo.role;
+      const userInfoUpdated = { ...userData, userInfo };
+
+      setUserData(userInfoUpdated);
+      localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
+    }
   };
   return (
     <>
@@ -41,7 +51,6 @@ const PresenterView = () => {
           </>
         ))}
       {audienceAnswers && <PresenterPromptEndingTip />}
-      {timeUpCode && (
         <div className="w-full text-center mt-5">
           <button
             className="text-white bg-ui-orange px-3 py-1 rounded-md hover:scale-[1.02]"
@@ -50,7 +59,8 @@ const PresenterView = () => {
             Clear session
           </button>
         </div>
-      )}
+      {/* {timeUpCode && (
+      )} */}
     </>
   );
 };

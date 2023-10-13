@@ -9,7 +9,7 @@ const PresenterQuestionCard = () => {
 
   const searchParams = useSearchParams();
   const question = searchParams.get("q");
-  const [timer, setTimer] = useState(10000);
+  const [timer, setTimer] = useState(60000);
   const [date, setDate] = useState(Date.now());
   const resetTimer = () => {
     setDate(Date.now());

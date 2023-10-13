@@ -61,6 +61,7 @@ const AudienceAnswerWriter = () => {
         setGetResponse(true);
         setAudienceQuestion(response.data.question.question)
       } catch (error) {
+        redirectBackToInsertCode()
         console.log(error);
         setGetResponse(true)
         setLoading(false);
