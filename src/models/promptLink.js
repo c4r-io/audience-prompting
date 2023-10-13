@@ -1,8 +1,13 @@
 import mongoose, { Schema, models } from 'mongoose';
 
 const promptLinkSchema = new Schema({
-    code: { type: 'String' },
+    uid: { type: 'String' },
     question: { type: 'String' },
+    code: { type: 'String' },
+    research: { type: 'String' },
+    carear_stage: { type: 'String' },
+    lab_role: { type: 'Array' },
+    computational_lab: { type: 'Boolean', default: false },
     timeUp: { type: 'Boolean', default: false },
 }, {
     timestamps: true

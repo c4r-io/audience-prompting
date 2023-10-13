@@ -5,10 +5,9 @@ const audienceAnswerSchema = new Schema({
     code: { type: 'String' },
     research: { type: 'String' },
     carear_stage: { type: 'String' },
+    lab_role: { type: 'Array' },
     question: { type: 'String' },
     answer: { type: 'String' },
-    lab_role: { type: 'Array' },
-    computational_lab: { type: 'Boolean', default: false },
 }, {
     timestamps: true
 })

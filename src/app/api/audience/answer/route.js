@@ -6,7 +6,7 @@ export async function POST(req, context) {
     const body = await req.json()
     connectMongoDB()
 
-    const promptExist = await PromptLink.findOne({ code: body.userInfo.code })
+    const promptExist = await PromptLink.findOne({ code: body.code })
     if (promptExist && promptExist.timeUp) {
         return Response.json({ "message": "Thank you for approach. Time's up", timeUp: true }, { status: 200 })
     }
@@ -14,7 +14,7 @@ export async function POST(req, context) {
         return Response.json({ "message": "Question not found" }, { status: 404 })
     }
 
-    const answerExist = await AudienceAnswer.findOne({ uid: body.uid, code: body.userInfo.code })
+    const answerExist = await AudienceAnswer.findOne({ uid: body.uid, code: body.code })
     if (answerExist) {
         answerExist.answer = body.answer
         await answerExist.save()
@@ -22,7 +22,7 @@ export async function POST(req, context) {
     } else {
         const createdAnswer = await AudienceAnswer.create({
             uid: body.uid,
-            code: body.userInfo.code,
+            code: body.code,
             research: body.userInfo.research,
             carear_stage: body.userInfo.carear_stage,
             question: body.question,

@@ -81,19 +81,6 @@ export const AudienceQuestionContextProvider = ({ children }) => {
   );
 };
 
-export const TimeUpCodeContext = createContext(null);
-
-export const TimeUpCodeContextProvider = ({ children }) => {
-  const [timeUpCode, setTimeUpCode] = useState(false);
-
-  return (
-    <TimeUpCodeContext.Provider
-      value={{ timeUpCode, setTimeUpCode }}
-    >
-      {children}
-    </TimeUpCodeContext.Provider>
-  );
-};
 
 export const AllContextProviders = ({ children }) => {
   return (
@@ -103,9 +90,7 @@ export const AllContextProviders = ({ children }) => {
           <AudienceStepsContextProvider>
             <AudienceQuestionContextProvider>
             <AudienceAnswerContextProvider>
-              <TimeUpCodeContextProvider>
               {children}
-              </TimeUpCodeContextProvider>
             </AudienceAnswerContextProvider>
             </AudienceQuestionContextProvider>
           </AudienceStepsContextProvider>

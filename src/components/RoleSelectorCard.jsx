@@ -6,25 +6,17 @@ const RoleSelectorCard = () => {
   const { userData, setUserData } = useContext(UserContext);
 
   const otpHandler = () => {
-    console.log("otp added");
-    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
-    if (userInfo) {
-      userInfo.code = otp;
-      userInfo.role = "audience";
-      const userInfoUpdated = { ...userData, userInfo };
-
+    if (userData) {
+      const userInfoUpdated = { ...userData, code: otp, role: "audience" };
       setUserData(userInfoUpdated);
-      localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
     }
   };
   const presenterRole = () => {
-    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
-    if (userInfo) {
-      userInfo.role = "presenter";
-      const userInfoUpdated = { ...userData, userInfo };
-
+    if (userData) {
+      console.log("UPDated user info: ",userData)
+      const userInfoUpdated = { ...userData, role: "presenter" };
+      console.log("UPDated user info: ",userInfoUpdated)
       setUserData(userInfoUpdated);
-      localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
     }
   };
   return (
