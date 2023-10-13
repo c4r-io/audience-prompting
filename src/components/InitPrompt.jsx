@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import RoleSelectorCard from "./RoleSelectorCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { v4 as uuidv4 } from "uuid";
 
 export default function InitPrompt() {
   return (
@@ -23,23 +24,32 @@ export default function InitPrompt() {
 const AllViews = () => {
   const [hasLocalStorageData, setHasLocalStorageData] = useState(false);
   const { userData, setUserData } = useContext(UserContext);
+
+  const guestUid = () => {
+    const guestUserId = localStorage.getItem("ap-guest-id");
+    if (!guestUserId) {
+      const id = uuidv4();
+      localStorage.setItem("ap-guest-id", id);
+      return id
+    }
+    return guestUserId
+  };
+
   const getUserInfo = () => {
     const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
     if (userInfo &&
-      userInfo.computational_lab &&
+      userInfo?.lab_role &&
+      userInfo.lab_role.length > 0 &&
       userInfo.carear_stage && 
-      userInfo.research &&
-      userInfo.lab_role
-      
+      userInfo.research
       ) {
       setHasLocalStorageData(true);
       setUserData({
         ...userData,
         userInfo,
         userExists: true,
+        uid:guestUid()
       });
-      if (Object.keys(userInfo).length == 4) {
-      }
     }
   };
   useEffect(() => {
@@ -56,11 +66,11 @@ const AllViews = () => {
         </>
       ) : (
         <>
-          {!userData.userInfo?.role ? (
+          {!userData?.role ? (
             <RoleSelectorCard></RoleSelectorCard>
           ) : (
             <>
-              {userData.userInfo?.role == "presenter" ? (
+              {userData?.role == "presenter" ? (
                 <PresenterView />
               ) : (
                 <AudienceView />

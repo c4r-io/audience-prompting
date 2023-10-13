@@ -1,7 +1,10 @@
 import React, { createRef, useRef, useState } from "react";
 
 const Selector = ({ children, feilds, handleSelected }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const listElement = useRef(null);
+  const inputElement = useRef(null);
+  const [isOnList, setIsOnList] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   // Create a 2D array of refs
   const divRefs = useRef(
@@ -19,19 +22,26 @@ const Selector = ({ children, feilds, handleSelected }) => {
     const updatedClicked = [...scheduleClicked];
     updatedClicked[rowIndex] = !updatedClicked[rowIndex];
     setScheduleClicked(updatedClicked);
-    setFeildSelected(updatedClicked)
+    setFeildSelected(updatedClicked);
   };
   const setFeildSelected = (e) => {
     setSelected(e);
-    const selectedValues = []
+    const selectedValues = [];
     if (handleSelected) {
       selectedValues.length = 0;
-      for (let i in feilds){
-        if(e[i]){
-          selectedValues.push(feilds[i])
+      for (let i in feilds) {
+        if (e[i]) {
+          selectedValues.push(feilds[i]);
         }
       }
       handleSelected(selectedValues);
+    }
+  };
+  const blurHandler = () => {
+    if (isOnList) {
+      setIsOpen(false);
+    } else {
+      inputElement.current.focus();
     }
   };
   return (
@@ -40,11 +50,20 @@ const Selector = ({ children, feilds, handleSelected }) => {
         isOpen ? "rounded-br-none" : ""
       } bg-ui-gray-2 text-white relative rounded-xl shadow-[0_15px_10px_-10px_rgba(0,0,0,0.4)]`}
     >
-      <div className="bg-ui-gray-1 w-[34px] h-[34px] flex items-center justify-center absolute left-0 top-0 cursor-pointer rounded-tl-xl  rounded-bl-xl"
-      
-      onClick={() => {
-        setIsOpen(!isOpen);
-      }}
+      <input
+        ref={inputElement}
+        className={`${isOpen?'z-0':'z-50'} h-[34px] px-2 cursor-pointer w-full absolute top-0 left-0 opacity-0`}
+        type="text"
+        onFocus={() => {
+          setIsOpen(true);
+        }}
+        onBlur={blurHandler}
+      />
+      <div
+        className="bg-ui-gray-1 w-[34px] h-[34px] flex items-center justify-center absolute left-0 top-0 cursor-pointer rounded-tl-xl  rounded-bl-xl"
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -62,15 +81,17 @@ const Selector = ({ children, feilds, handleSelected }) => {
         </svg>
       </div>
       <div className="text-black width-full-34px flex justify-start items-center relative ml-[34px]">
-        <div className="h-[34px] flex items-center px-2 cursor-pointer w-full"
-        
-      onClick={() => {
-        setIsOpen(!isOpen);
-      }}
+        <div
+          className="h-[34px] flex items-center px-2 cursor-pointer w-full"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
         >
-          <p>{ children}</p>
+          <p>{children}</p>
         </div>
         <div
+          onMouseOver={() => setIsOnList(false)}
+          onMouseLeave={() => setIsOnList(true)}
           className={`${
             isOpen ? "" : "h-0 overflow-hidden"
           } absolute top-[100%] w-full bg-ui-gray-3 rounded-bl-xl rounded-br-xl z-40`}
@@ -78,25 +99,27 @@ const Selector = ({ children, feilds, handleSelected }) => {
           {feilds &&
             divRefs.current.map((ref, index) => (
               <div
-                className={`${scheduleClicked[index]?"bg-ui-gray-2/30":''} h-[34px] flex items-center px-2 cursor-pointer relative`}
+                className={`${
+                  scheduleClicked[index] ? "bg-ui-gray-2/30" : ""
+                } h-[34px] flex items-center px-2 cursor-pointer relative`}
                 key={index}
                 ref={ref}
                 onClick={() => handleClick(index)}
               >
                 <div className="absolute left-0 top-0 w-[34px] h-[34px] flex items-center justify-center">
-                {scheduleClicked[index] && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={20}
-                  height={15}
-                  viewBox="0 0 20 15"
-                  fill="none"
-                >
-                  <path
-                    d="M0.0227051 7.81251L1.53407 6.26138L6.78407 11.4318L17.642 0.613647L19.1932 2.16478L6.78407 14.5341L0.0227051 7.81251Z"
-                    fill="#A5A5A5"
-                  />
-                </svg>
+                  {scheduleClicked[index] && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={20}
+                      height={15}
+                      viewBox="0 0 20 15"
+                      fill="none"
+                    >
+                      <path
+                        d="M0.0227051 7.81251L1.53407 6.26138L6.78407 11.4318L17.642 0.613647L19.1932 2.16478L6.78407 14.5341L0.0227051 7.81251Z"
+                        fill="#A5A5A5"
+                      />
+                    </svg>
                   )}
                 </div>
                 <p className="pl-[24px]">{feilds[index]}</p>

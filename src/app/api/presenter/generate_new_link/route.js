@@ -18,14 +18,20 @@ export async function POST(req) {
         else if (promptExist && iterator > 3) {
             const createdLink = await PromptLink.create({
                 code: generatedOTP + "" + Math.round(Math.random() * 100),
-                question: body.question
+                question: body.question,
+                role: body.role,
+                uid: body.uid,
+                ...body.userInfo
             })
             return Response.json({ "message": "Success", createdLink })
         }
         else {
             const createdLink = await PromptLink.create({
                 code: generatedOTP,
-                question: body.question
+                question: body.question,
+                role: body.role,
+                uid: body.uid,
+                ...body.userInfo
             })
             return Response.json({ "message": "Success", createdLink })
         }

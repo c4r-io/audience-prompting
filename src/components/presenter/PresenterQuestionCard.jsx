@@ -19,7 +19,7 @@ const PresenterQuestionCard = () => {
   const renderer = ({ hours, minutes, seconds, completed }) => {
     if (completed) {
       // Render a completed state
-      setPresenterStep(3);
+      setPresenterStep(4);
       return <span>0</span>;
     } else {
       // Render a countdown
@@ -38,7 +38,7 @@ const PresenterQuestionCard = () => {
         </button>
         <button
           className="bg-ui-violate w-full mt-1 px-2 py-1 text-[16px] hover:scale-[1.02] text-white font-bold rounded-md"
-          onClick={() => setPresenterStep(3)}
+          onClick={() => setPresenterStep(4)}
         >
           Done
         </button>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useContext, useState } from "react";
 import PresenterCardLayout from "./PresenterCardLayout";
-import { AudienceAnswersContext, PresenterContext, TimeUpCodeContext } from "@/contextapi/UserContext";
+import { AudienceAnswersContext, PresenterContext, UserContext } from "@/contextapi/UserContext";
 import api from "@/config/axiosconfig";
 import { toast } from "react-toastify";
 
@@ -9,9 +9,9 @@ const PresenterTimeUpCard = () => {
   const [loading, setLoading] = useState(false);
   const [answerShow, setAnswerShow] = useState(false);
 
+  const { userData, setUserData } = useContext(UserContext);
   const { audienceAnswers, setAudienceAnswers } = useContext(AudienceAnswersContext);
   const { presenterStep, setPresenterStep } = useContext(PresenterContext);
-  const { timeUpCode, setTimeUpCode } = useContext(TimeUpCodeContext);
 
   const toggleAnswerShow = () => {
     if(answerShow){
@@ -28,7 +28,7 @@ const PresenterTimeUpCard = () => {
     setLoading(true);
     const config = {
       method: "get",
-      url: "api/audience/answers/"+userInfo.code,
+      url: "api/audience/answers/"+userData.code,
       headers: {
         "content-type": "application/json",
       },
@@ -43,7 +43,6 @@ const PresenterTimeUpCard = () => {
     }
   };
   const updatePrompt = async (timeUp) => {
-    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
     setLoading(true);
     const config = {
       method: "patch",
@@ -53,7 +52,7 @@ const PresenterTimeUpCard = () => {
       },
       data: {
         timeUp: timeUp,
-        code: userInfo.code
+        code: userData.code
       },
     };
     try {
@@ -67,16 +66,14 @@ const PresenterTimeUpCard = () => {
   };
   const timeUpHandler =()=>{
     updatePrompt(true)
-    setPresenterStep(3)
-    toast.warning("Time&apos;s up!");
-    setTimeUpCode(true)
+    setPresenterStep(4)
+    toast.warning("Time's up!");
   }
   const extendHandler =()=>{
-    setTimeUpCode(false)
     updatePrompt(false)
     setAnswerShow(false);
     setAudienceAnswers(null)
-    setPresenterStep(2)
+    setPresenterStep(3)
     toast.success("Time extended!");
   }
   return (

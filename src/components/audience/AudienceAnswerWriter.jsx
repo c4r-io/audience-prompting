@@ -29,57 +29,12 @@ const AudienceAnswerWriter = () => {
   const [writenAnswer, setWrittenAnswer] = useState(audienceAnswer);
 
   const redirectBackToInsertCode = () => {
-    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
-    if (userInfo) {
-      delete userInfo.code;
-      delete userInfo.role;
-      const userInfoUpdated = { ...userData, userInfo };
-
+    if (userData) {
+      const userInfoUpdated = { ...userData, code: null, role: null };
       setUserData(userInfoUpdated);
-      localStorage.setItem("ap-au-in", JSON.stringify(userInfo));
     }
   };
 
-  const checkPrompt = async () => {
-    const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
-    if (userInfo.code) {
-      setLoading(true);
-      const config = {
-        method: "get",
-        url: "api/audience/check_time_up/" + userInfo.code,
-        headers: {
-          "content-type": "application/json",
-        },
-        params: { code: userInfo.code },
-      };
-      try {
-        const response = await api.request(config);
-        if (response.data.timeUp) {
-          redirectBackToInsertCode()
-          setLoading(false);
-        }
-        setGetResponse(true);
-        setAudienceQuestion(response.data.question.question)
-      } catch (error) {
-        redirectBackToInsertCode()
-        console.log(error);
-        setGetResponse(true)
-        setLoading(false);
-      }
-    } else {
-      toast.warning("Time's Up!");
-     
-      redirectBackToInsertCode()
-      return;
-    }
-  };
-  useEffect(() => {
-    if (!getResponse) {
-      setTimeout(() => {
-        checkPrompt();
-      }, 1000);
-    }
-  });
   const submitAnswer = async () => {
     const userInfo = JSON.parse(localStorage.getItem("ap-au-in"));
     const guestUId = localStorage.getItem("ap-guest-id");
@@ -95,13 +50,13 @@ const AudienceAnswerWriter = () => {
         answer: writenAnswer,
         userInfo,
         uid: guestUId,
+        code: userData.code,
       },
     };
     try {
       const response = await api.request(config);
       if (response.data?.timeUp) {
         toast.warning("Time's Up! Thank you for your approach.");
-
         redirectBackToInsertCode()
       } else {
         setAudienceAnswer(writenAnswer);
@@ -110,8 +65,7 @@ const AudienceAnswerWriter = () => {
       setLoading(false);
     } catch (error) {
       console.log("err", error);
-      // if (error.response.data.status === 404) {
-      // }
+      toast.warning("Time's Up or probably Question not found, Thank you for your approach.");
       redirectBackToInsertCode();
       setLoading(false);
     }
