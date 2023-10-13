@@ -5,7 +5,7 @@ export async function GET(req, context) {
     connectMongoDB()
     const promptExist = await PromptLink.findOne({ code: params.slug, timeUp: false })
     if (promptExist) {
-        return Response.json({ "message": "Already exist",question: promptExist._doc, timeUp: false })
+        return Response.json({ "message": "Already exist",question: promptExist._doc, timeUp: promptExist._doc.timeUp })
     } else {
         return Response.json({ "message": "Not exist", timeUp: true })
     }

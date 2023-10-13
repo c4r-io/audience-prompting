@@ -50,7 +50,10 @@ const AllViews = () => {
     <div>
       {/* <div className="w-10">{JSON.stringify(userData)}</div> */}
       {!userData.userExists ? (
+        <>
+        <div className="text-white mb-2 text-center">Let&apos;s get to know your profession</div>
         <InitialsQuestionsView />
+        </>
       ) : (
         <>
           {!userData.userInfo?.role ? (
